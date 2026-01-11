@@ -11,6 +11,7 @@ from src.engine.event_engine.event_context import Context
 class PlayerContext(Context):
     name: str
     state: PlayerStateEnum
+    is_samewolfteam: bool
     
 @dataclass
 class GameContext(Context):
@@ -23,22 +24,22 @@ class SelfContext(Context):
 class UserInterface(Receiver):
     def __init__(self, name:str) -> None:
         self._name = name   # id for an instance
-        self._player_context:Dict[str, PlayerStateEnum] = {}
-        self._game_context: Optional[GameTimeEnum] = None
-        self._self_context: Optional[RoleEnum] = None
+        self._player_context: Dict[str, PlayerContext] = {}
+        self._game_context: Optional[GameContext] = None
+        self._self_context: Optional[SelfContext] = None
 
     @property
-    def player_context(self) -> Dict[str, PlayerStateEnum]:
+    def player_context(self) -> Dict[str, PlayerContext]:
         return self._player_context
 
     @property
-    def game_context(self) -> GameTimeEnum:
+    def game_context(self) -> GameContext:
         if self._game_context is None:
             raise ValueError("Game context has not been set yet.")
         return self._game_context
 
     @property
-    def self_context(self) -> RoleEnum:
+    def self_context(self) -> SelfContext:
         if self._self_context is None:
             raise ValueError("Self context has not been set yet.")
         return self._self_context
@@ -49,15 +50,15 @@ class UserInterface(Receiver):
 
     def receive(self, key: MessageKeyT, value: Union[PlayerContext, GameContext, SelfContext]) -> bool:
         if key == PlayerContext.cls_name:
-            self._player_context[value.name] = value.state # type: ignore
+            self._player_context[value.name] = value # type: ignore
 
         if key == GameContext.cls_name:
-            self.game_context = value.time # type: ignore
+            self.game_context = value # type: ignore
 
         if key == SelfContext.cls_name:
-            self.self_context = value.role # type: ignore
+            self.self_context = value # type: ignore
 
         return True
 
-    def show(self):
+    def show(self) -> Any:
         ...

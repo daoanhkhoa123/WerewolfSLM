@@ -1,5 +1,5 @@
 from enum import IntEnum, auto
-from src.engine.state_engine.common.role import Role
+from src.engine.state_engine.common.role import Role, RoleTeam
 from src.role.guard import GuardRole
 from src.role.seer import SeerRole
 from src.role.villager import VillagerRole
