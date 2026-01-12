@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING, final, Any, Optional, List
-from src.engine.state_engine.common.state import PlayerStateEnum
-from src.engine.state_engine.common.action import ActionEnum
-from src.engine.player_entity_manager import GameTimeEnum
+from src.engine.common.state import PlayerStateEnum
+from src.engine.common.action import ActionEnum
+from src.engine.common.game_context import GameContext
 
 if TYPE_CHECKING:
-    from src.engine.state_engine.common.role import Role
+    from src.engine.common.role import Role
 
 class PlayerEntity:
     def __init__(self, name: str) -> None:
@@ -45,6 +45,6 @@ class PlayerEntity:
     def act(self, action: ActionEnum) -> Any:
         return self.role.act(action)
     
-    def get_actionables(self, time:GameTimeEnum) -> Optional[List[ActionEnum]]:
-        return self.role.get_actionables(time)
+    def get_actionables(self, context:GameContext) -> Optional[List[ActionEnum]]:
+        return self.role.get_actionables(context)
     

@@ -1,7 +1,7 @@
 from typing_extensions import Self
-from typing import Optional, Dict
+from typing import Optional, Dict, Sequence
 from src.engine.client_engine.client import Client
-from src.engine.client_engine.controller import Controller
+from src.engine.client_engine.controller import Controller, ChoiceT
 from src.engine.client_engine.user_interface import UserInterface
 
 class ClientRegistry:
@@ -49,6 +49,10 @@ class Client:
     @property
     def controller(self):
         return self._controller
+    
+    def choose(self, choices: Sequence[ChoiceT], 
+               zeroth_choice: Optional[ChoiceT] = None) -> ChoiceT: ...
+        
     
 
     

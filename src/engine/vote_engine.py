@@ -1,29 +1,40 @@
-from roles import Role
-from engine.state_engine.common.player import PlayerEntity
-from typing import Any, Iterable
-from engine.ultils.event import Event, ConEnum
-from src.engine.ultils.con_enum import ConEnum, con_auto
-from collections import deque
-from dataclasses import dataclass
+from typing import TypeVar, Generic, Dict, Hashable
 
-class VoteEnum(ConEnum):
-    VOT_SEND = con_auto()
+VoterT = TypeVar("VoterT", bound=Hashable)
+CandidateT = TypeVar("CandidateT", bound=Hashable)
 
-class VoteEvent(Event):
-    def __init__(self, author: PlayerEntity, target: PlayerEntity) -> None:
-        super().__init__(author, target, VoteEnum.VOT_SEND)
 
-class VoteEngine:
-    def __init__(self, candidates:Iterable[Any]) -> None:
-        self.ballot = {c:0 for c in candidates}
+class VoteBallot(Generic[VoterT, CandidateT]):
+    def __init__(self, author: VoterT, target: CandidateT) -> None:
+        self._author = author
+        self._target = target
 
-    def vote(self, target: Any):
-        self.ballot[target] += 1
+    @property
+    def author(self) -> VoterT:
+        return self._author
 
-    def get_winner(self):
-        return max(self.ballot.keys(), key=lambda c: self.ballot[c])
-    
-    def clear(self):
-        for c in self.ballot:
-            self.ballot[c] = 0
+    @property
+    def target(self) -> CandidateT:
+        return self._target
 
+
+class VoteEngine(Generic[VoterT, CandidateT]):
+    def __init__(self) -> None:
+        self._vote_direction: Dict[VoterT, CandidateT] = {}
+
+    def get_voted_from(self, author: VoterT) -> CandidateT:
+        return self._vote_direction[author]
+
+    def vote(self, ballot: VoteBallot[VoterT, CandidateT]) -> None:
+        self._vote_direction[ballot.author] = ballot.target
+
+    def get_winner(self) -> CandidateT:
+        count: Dict[CandidateT, int] = {}
+
+        for target in self._vote_direction.values():
+            count[target] = count.get(target, 0) + 1
+
+        return max(count.keys(), key= lambda x: count[x])
+
+    def clear(self) -> None:
+        self._vote_direction.clear()

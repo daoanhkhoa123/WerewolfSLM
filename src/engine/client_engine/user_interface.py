@@ -1,10 +1,10 @@
 from typing import Any, Type, Sequence, Dict, NewType, List, Union, Optional
 from src.engine.event_engine.message_broker import MessageKeyT, Receiver
 from dataclasses import dataclass
-from src.engine.player_entity_manager import GameTimeEnum
-from src.engine.state_engine.common.state import PlayerStateEnum
+from src.engine.common.game_context import GameContext
+from src.engine.common.state import PlayerStateEnum
 from src.role import RoleEnum
-from src.engine.state_engine.common.action import ActionEnum
+from src.engine.common.action import ActionEnum
 from src.engine.event_engine.event_context import Context
 
 @dataclass
@@ -12,10 +12,6 @@ class PlayerContext(Context):
     name: str
     state: PlayerStateEnum
     is_samewolfteam: bool
-
-@dataclass
-class GameContext(Context):
-    time: GameTimeEnum
 
 @dataclass
 class SelfContext(Context):

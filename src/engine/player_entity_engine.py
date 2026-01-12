@@ -1,24 +1,18 @@
 from typing import Dict, Sequence, final, List, Iterator, MutableSequence
-from src.engine.state_engine.common.player import PlayerEntity
-from src.engine.state_engine.common.state import PlayerStateEnum
+from src.engine.common.player import PlayerEntity
+from src.engine.common.state import PlayerStateEnum
 from dataclasses import dataclass
 from src.role import RoleEnum, build_role
 import random
 from enum import auto, IntEnum
 
-# should not be extended
-@final
-class GameTimeEnum(IntEnum):
-    DAY = auto()
-    NIGHT = auto()
-    LYNCHING = auto()
 
 @dataclass
 class GameSetting:
     names: Sequence[str]
     register_roles: Dict[RoleEnum, int]
 
-class PlayerEntityManager:
+class PlayerEntityEngine:
     def __init__(self, game_setting: GameSetting) -> None:
         self._names = game_setting.names
         self._register_roles = game_setting.register_roles
@@ -54,15 +48,12 @@ class PlayerEntityManager:
     def sorted_roles(self):
         return self._sorted_roleenum
 
-    def get_players_by_role(self, roleenum:RoleEnum, only_alive: bool = True) -> Iterator[PlayerEntity]:
-            for name in self.role_names_map[roleenum]:
-                if only_alive and self.name_entity_map[name].state == PlayerStateEnum.DEAD:
-                    continue
-                yield self.name_entity_map[name]
 
-    def get_players(self, only_alive: bool = True) -> Iterator[PlayerEntity]:
-        for roleenum in self.sorted_roles:
-            yield from self.get_players_by_role(roleenum, only_alive)
+    def get_players_by_role(self, roleenum:RoleEnum, only_alive: bool = True) -> Iterator[PlayerEntity]:
+        for name in self.role_names_map[roleenum]:
+            if only_alive and self.name_entity_map[name].state == PlayerStateEnum.DEAD:
+                continue
+            yield self.name_entity_map[name]
 
     def _get_role_pool(self) -> MutableSequence[RoleEnum]:
         role_pool = list()
@@ -70,6 +61,10 @@ class PlayerEntityManager:
             role_pool.extend([enum] * count)
 
         return role_pool
+
+    def get_all_alive_players(self):
+        role_pool = self._get_role_pool()
+        
 
     def build_role_names_map(self, shuffle:bool = True) -> None:
         role_pool = self._get_role_pool()
@@ -85,3 +80,4 @@ class PlayerEntityManager:
             dicc[role].append(name)
 
         self._role_names_map = dicc
+

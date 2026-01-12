@@ -1,7 +1,7 @@
-from src.engine.state_engine.common.state import PlayerStateEnum
-from src.engine.state_engine.common.action import ActionEnum
-from src.engine.player_entity_manager import GameTimeEnum
+from src.engine.common.state import PlayerStateEnum
+from src.engine.common.action import ActionEnum
 from typing import List, Optional, final, Any
+from src.engine.common.game_context import GameContext
 from enum import auto, IntEnum
 
 class RoleTeam(IntEnum):
@@ -29,7 +29,7 @@ class Role:
         self._actions.add(action_enum)
     
     def act(self, action: ActionEnum) -> Any:    ...
-    def get_actionables(self, time:GameTimeEnum) -> Optional[List[ActionEnum]]:  ...
+    def get_actionables(self, context:GameContext) -> Optional[List[ActionEnum]]:  ...
     
 
 ######################## DO NOT USE #################
