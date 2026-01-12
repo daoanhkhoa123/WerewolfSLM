@@ -20,7 +20,6 @@ class GameSetting:
 
 class PlayerEntityManager:
     def __init__(self, game_setting: GameSetting) -> None:
-
         self._names = game_setting.names
         self._register_roles = game_setting.register_roles
         self._sorted_roleenum = sorted(game_setting.register_roles.keys())

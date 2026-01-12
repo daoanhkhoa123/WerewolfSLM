@@ -1,6 +1,6 @@
 from typing import List, Optional
 from src.engine.state_engine.common.action import ActionEnum
-from src.engine.game_engine import GameTimeEnum
+from src.engine.player_entity_manager import GameTimeEnum
 from src.engine.state_engine.common.role import Role, RoleTeam
 from src.engine.state_engine.common.state import PlayerStateEnum
 

@@ -5,7 +5,7 @@ from engine.ultils.event import Event, ConEnum
 from src.engine.ultils.con_enum import ConEnum, con_auto
 from collections import deque
 from dataclasses import dataclass
-from src.engine.game_engine import system
+from src.engine.player_entity_manager import system
 
 @dataclass
 class ChatMessage:

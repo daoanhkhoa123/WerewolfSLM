@@ -1,6 +1,6 @@
 from src.engine.state_engine.common.state import PlayerStateEnum
 from src.engine.state_engine.common.action import ActionEnum
-from src.engine.game_engine import GameTimeEnum
+from src.engine.player_entity_manager import GameTimeEnum
 from typing import List, Optional, final, Any
 from enum import auto, IntEnum
 

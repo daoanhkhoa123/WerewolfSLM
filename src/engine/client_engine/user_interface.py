@@ -1,7 +1,7 @@
 from typing import Any, Type, Sequence, Dict, NewType, List, Union, Optional
 from src.engine.event_engine.message_broker import MessageKeyT, Receiver
 from dataclasses import dataclass
-from src.engine.game_engine import GameTimeEnum
+from src.engine.player_entity_manager import GameTimeEnum
 from src.engine.state_engine.common.state import PlayerStateEnum
 from src.role import RoleEnum
 from src.engine.state_engine.common.action import ActionEnum
