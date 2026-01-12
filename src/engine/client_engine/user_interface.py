@@ -7,11 +7,14 @@ from src.role import RoleEnum
 from src.engine.common.action import ActionEnum
 from src.engine.event_engine.event_context import Context
 
+
+
 @dataclass
 class PlayerContext(Context):
     name: str
-    state: PlayerStateEnum
-    is_samewolfteam: bool
+    is_alive: bool
+    is_sameteam: bool
+    on_team
 
 @dataclass
 class SelfContext(Context):
