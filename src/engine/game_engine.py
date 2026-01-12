@@ -1,6 +1,7 @@
-from typing import Dict, Sequence, final, List
+from typing import Dict, Sequence, final, List, Iterator, MutableSequence
 from src.engine.state_engine.common.player import PlayerEntity
 from src.engine.state_engine.common.state import PlayerStateEnum
+from dataclasses import dataclass
 from src.role import RoleEnum, build_role
 import random
 from enum import auto, IntEnum
@@ -12,59 +13,76 @@ class GameTimeEnum(IntEnum):
     NIGHT = auto()
     LYNCHING = auto()
 
-class PlayerManager:
-    def __init__(self, names: Sequence[str], register_roles: Dict[RoleEnum, int]) -> None:
-        if len(names) != sum(x for x in register_roles.values()):
+@dataclass
+class GameSetting:
+    names: Sequence[str]
+    register_roles: Dict[RoleEnum, int]
+
+class PlayerEntityManager:
+    def __init__(self, game_setting: GameSetting) -> None:
+
+        self._names = game_setting.names
+        self._register_roles = game_setting.register_roles
+        self._sorted_roleenum = sorted(game_setting.register_roles.keys())
+        self._name_entity_map: Dict[str, PlayerEntity] = {n: PlayerEntity(n) for n in game_setting.names}
+        self._role_names_map: Dict[RoleEnum, List[str]] = {}
+
+        if len(self._name_entity_map) != len(game_setting.names):
+            raise ValueError(
+                "Duplicate player names detected in game_setting.names"
+            )
+
+        if len(game_setting.names) != sum(x for x in game_setting.register_roles.values()):
             raise ValueError("Number of names must match total registered roles")
-         
-        self._names = names
-        self._register_roles = register_roles
-        self._players: Dict[RoleEnum, List[PlayerEntity]] = {}
+    
+    @property
+    def names(self) -> Sequence[str]:
+        return self._names
 
     @property
-    def players(self):
-        return self._players
+    def register_roles(self) -> Dict[RoleEnum, int]:
+        return self._register_roles
 
-    def build_players(self, shuffle:bool = True):
+    @property
+    def name_entity_map(self) -> Dict[str, PlayerEntity]:
+        return self._name_entity_map
+
+    @property
+    def role_names_map(self) -> Dict[RoleEnum, List[str]]:
+        return self._role_names_map
+
+    @property
+    def sorted_roles(self):
+        return self._sorted_roleenum
+
+    def get_players_by_role(self, roleenum:RoleEnum, only_alive: bool = True) -> Iterator[PlayerEntity]:
+            for name in self.role_names_map[roleenum]:
+                if only_alive and self.name_entity_map[name].state == PlayerStateEnum.DEAD:
+                    continue
+                yield self.name_entity_map[name]
+
+    def get_players(self, only_alive: bool = True) -> Iterator[PlayerEntity]:
+        for roleenum in self.sorted_roles:
+            yield from self.get_players_by_role(roleenum, only_alive)
+
+    def _get_role_pool(self) -> MutableSequence[RoleEnum]:
         role_pool = list()
         for enum, count in self._register_roles.items():
             role_pool.extend([enum] * count)
+
+        return role_pool
+
+    def build_role_names_map(self, shuffle:bool = True) -> None:
+        role_pool = self._get_role_pool()
         
         if shuffle:
             random.shuffle(role_pool)
 
-        for enum, name in zip(role_pool, self._names):
-            if enum not in self._players:
-                self._players[enum] = [PlayerEntity(name, build_role(enum))]
-                continue
-            self._players[enum].append(PlayerEntity(name, build_role(enum)))
+        dicc:Dict[RoleEnum, List[str]] = dict()
+        for role, name in zip(role_pool, self.names):
+            if role not in dicc:
+                dicc[role] = list()
 
+            dicc[role].append(name)
 
-class GameplayEngine(PlayerManager):
-    def __init__(self, names: Sequence[str], register_roles: Dict[RoleEnum, int]) -> None:
-        super().__init__(names, register_roles)
-
-        self._day_count = 0
-        self._current_time: GameTimeEnum = GameTimeEnum.NIGHT
-    
-    @property
-    def day_count(self) -> int:
-        return self._day_count
-    
-    def next_time(self, time:GameTimeEnum):
-        if time == GameTimeEnum.NIGHT:
-            self._current_time = GameTimeEnum.DAY
-        
-        if time == GameTimeEnum.DAY:
-            self._current_time = GameTimeEnum.NIGHT
-        
-        raise ValueError(f"Invalid time: Got {time}; Expected from {GameTimeEnum}")
-    
-    def get_all_alives(self, role_enum: RoleEnum):
-        for player in self.players[role_enum]:
-            if player.state != PlayerStateEnum.DEAD:
-                yield player
-
-    def night(self):
-        for role_enum in RoleEnum:
-            for player in self.get_all_alives(role_enum):
+        self._role_names_map = dicc

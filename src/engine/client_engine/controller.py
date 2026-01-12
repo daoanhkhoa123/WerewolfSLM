@@ -1,4 +1,4 @@
-from typing import Sequence, TypeVar
+from typing import Sequence, TypeVar, Optional
 
 ChoiceT = TypeVar("ChoiceT")
 
@@ -10,4 +10,9 @@ class Controller:
     def name(self) -> int:
         return self._name
 
-    def choose(self, choices: Sequence[ChoiceT]) -> ChoiceT: ...
+    def default_choose(self, choices: Sequence[ChoiceT], 
+                       zeroth_choice: Optional[ChoiceT] = None) -> ChoiceT: ...        
+
+    def choose(self, choices: Sequence[ChoiceT], 
+               zeroth_choice: Optional[ChoiceT] = None) -> ChoiceT:
+        return self.default_choose(choices, zeroth_choice)

@@ -10,8 +10,9 @@ class Receiver:
 class MessageBroker():
     """
     Singleton class 
-    topic should be player name and key would be feature
-    because no one subcribe to 
+    topic is to choose the publisher, which has only one as game engine
+    key is to defined which payload type to update,
+        which i defined in src\engine\client_engine\user_interface.py
     """
     # singleton
     _instance: Optional[Self] = None

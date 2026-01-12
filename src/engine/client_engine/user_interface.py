@@ -12,14 +12,14 @@ class PlayerContext(Context):
     name: str
     state: PlayerStateEnum
     is_samewolfteam: bool
-    
+
 @dataclass
 class GameContext(Context):
     time: GameTimeEnum
 
 @dataclass
 class SelfContext(Context):
-    role: RoleEnum
+    role_enum: RoleEnum
 
 class UserInterface(Receiver):
     def __init__(self, name:str) -> None:
@@ -59,6 +59,11 @@ class UserInterface(Receiver):
             self.self_context = value # type: ignore
 
         return True
-
-    def show(self) -> Any:
-        ...
+    
+    def show_player_context(self) -> Any:   ...
+    def show_game_context(self) -> Any: ...
+    def show_self_context(self) -> Any: ...
+    def show_all_context(self) -> Any:  
+        self.show_game_context()
+        self.show_self_context()
+        self.show_player_context()

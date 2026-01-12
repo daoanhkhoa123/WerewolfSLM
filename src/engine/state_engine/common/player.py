@@ -1,15 +1,15 @@
 from typing import TYPE_CHECKING, final, Any, Optional, List
 from src.engine.state_engine.common.state import PlayerStateEnum
-from src.engine.state_engine.common.action import BaseAction, ActionEnum
+from src.engine.state_engine.common.action import ActionEnum
 from src.engine.game_engine import GameTimeEnum
 
 if TYPE_CHECKING:
     from src.engine.state_engine.common.role import Role
 
 class PlayerEntity:
-    def __init__(self, name: str, ) -> None:
+    def __init__(self, name: str) -> None:
         self._name = name         
-        self._role = role
+        self._role = None
     
     @property
     def name(self) -> str:
@@ -42,7 +42,7 @@ class PlayerEntity:
     def take_action(self, action_enum: ActionEnum):
         self.role._actions.add(action_enum)
     
-    def act(self, action: BaseAction) -> Any:
+    def act(self, action: ActionEnum) -> Any:
         return self.role.act(action)
     
     def get_actionables(self, time:GameTimeEnum) -> Optional[List[ActionEnum]]:
