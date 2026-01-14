@@ -10,6 +10,8 @@ class RoleTeam(IntEnum):
 
 class Role:
     team: RoleTeam
+    team_visibility: bool = False
+
     def __init__(self, state:PlayerStateEnum) -> None:
         self._state = state
         self._actions:set[ActionEnum] = set()

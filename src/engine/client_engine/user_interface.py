@@ -6,15 +6,14 @@ from src.engine.common.state import PlayerStateEnum
 from src.role import RoleEnum
 from src.engine.common.action import ActionEnum
 from src.engine.event_engine.event_context import Context
-
-
+from enum import IntEnum, auto
+ 
 
 @dataclass
 class PlayerContext(Context):
     name: str
     is_alive: bool
-    is_sameteam: bool
-    on_team
+    is_sharedsameteam: bool = False
 
 @dataclass
 class SelfContext(Context):
