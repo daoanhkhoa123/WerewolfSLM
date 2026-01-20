@@ -1,6 +1,6 @@
 from src.common.role import Role
 from src.common.action import BaseAction
-from src.common.state import State, auto2, IntEnum
+from src.common.state import State
 
 
 class ProtectAction(BaseAction):

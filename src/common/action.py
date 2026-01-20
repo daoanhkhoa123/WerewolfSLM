@@ -1,4 +1,5 @@
 from src.common.role import Role
+from typing import Any
 
 class BaseAction:
     def __init__(self, target:Role) -> None:
@@ -8,7 +9,7 @@ class BaseAction:
     def target(self):
         return self._target
 
-    def execute(self) -> None:  ...
+    def execute(self) -> Any:  ...
 
 """
 Because everyone has it, the ability to lynch

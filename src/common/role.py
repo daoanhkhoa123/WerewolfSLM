@@ -3,7 +3,6 @@ from typing import Dict, Optional, Set, Type, final
 from src.common.action import BaseAction, LynchAction
 from src.common.state import COMMON_STATE_DEFINE, NextStatesT, State
 
-
 class Role:
     # state - possible states mapping
     state_define: Dict[State, NextStatesT] = COMMON_STATE_DEFINE
