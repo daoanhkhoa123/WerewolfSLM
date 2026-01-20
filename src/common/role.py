@@ -60,8 +60,11 @@ class Role:
 
     def act(self, action: BaseAction) -> bool:
         """
-        execute the action. The result boolean is for checking the validity of the action
-        If not valid, then the game manager can call the user to choose again
+        NOTE: ALWAYS ASSUME THAT action IS POOLED FROM role.get_actionables()
+            AND THUS NO NEED TO VALIDATE THAT IT IS VALID
+
+        Execute the action. The result boolean is for checking the validity of the action
+            If not valid, then the game manager can call the user to choose again
 
         The main flow should be
         If valid:
@@ -69,5 +72,11 @@ class Role:
         else:
             return False
         """
-        action.execute()
-        return True
+        raise NotImplementedError(" Must be re-implemented ")
+
+        # all_actionables = self.get_actionables()
+        # if all_actionables and type(action) in all_actionables:
+        #     action.execute()
+        #     return True
+        # else:
+        #     return False

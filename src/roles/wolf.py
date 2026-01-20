@@ -13,4 +13,7 @@ WOLF_ACTION_DEFINE = {
 }
 
 class Wolf(Role):
+    """ The only differences between wolf and common is that 
+    At night, it can bite
+    """
     action_define: Dict[State, Set[Type[BaseAction]]]  = WOLF_ACTION_DEFINE
