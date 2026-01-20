@@ -10,6 +10,9 @@ class BaseAction:
 
     def execute(self) -> None:  ...
 
+"""
+Because everyone has it, the ability to lynch
+"""
 class LynchAction(BaseAction):
     def execute(self) -> None:
         self.target.die()

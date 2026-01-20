@@ -5,12 +5,6 @@ from src.common.state import State, auto2, IntEnum
 class WitchState(IntEnum):
     POWER_SLEEP = auto2()
 
-WITCH_DEFINE_STATE = {
-    **Role.state_define,
-    State.AWAKE: {State.DEAD, WitchState.POWER_SLEEP},
-    WitchState.POWER_SLEEP: {State.AWAKE, State.DEAD}
-}
-
 class PoisionAction(BaseAction):
     def execute(self) -> None:
         self.target.die()
@@ -19,8 +13,19 @@ class HealAction(BaseAction):
     def execute(self) -> None:
         self.target.set_state(State.HEALED)
 
+WITCH_ACTION_DEFINE = {
+    **Role.action_define,
+    WitchState.POWER_SLEEP: {HealAction, PoisionAction}
+}
+
+WITCH_DEFINE_STATE = {
+    **Role.state_define,
+    State.AWAKE: {State.DEAD, WitchState.POWER_SLEEP},
+    WitchState.POWER_SLEEP: {State.AWAKE, State.DEAD}
+}
+
 class Witch(Role):
-    action_define  = {WitchState.POWER_SLEEP: {HealAction, PoisionAction}} # type: ignore
+    action_define  = WITCH_ACTION_DEFINE # type: ignore
     state_define = WITCH_DEFINE_STATE
 
     def __init__(self, id) -> None:

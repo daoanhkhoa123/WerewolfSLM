@@ -7,9 +7,13 @@ class ProtectAction(BaseAction):
     def execute(self) -> None:
         self.target.set_state(State.PROTECTED)
 
+GUARD_ACTION_DEFINE = {
+    **Role.action_define,
+    State.SLEEP: {ProtectAction}
+}
 
 class Guard(Role):
-    action_define = {State.SLEEP: {ProtectAction}}
+    action_define = GUARD_ACTION_DEFINE
 
     def __init__(self, id) -> None:
         super().__init__(id)
