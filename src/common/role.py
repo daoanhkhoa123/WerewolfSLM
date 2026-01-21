@@ -18,7 +18,7 @@ class Role:
         """
         self._id = id
         self._state: State = self.default_state
-        self._action_state = self.default_state
+        self._night_action_state = self.default_state
 
     @property
     def id(self):
@@ -30,7 +30,7 @@ class Role:
     
     @property
     def action_state(self):
-        return self._action_state
+        return self._night_action_state
 
     @final
     def _set_state(self, state:State) -> bool:        
@@ -58,7 +58,7 @@ class Role:
         """
         Get all possible actions from the current state
         """
-        if self.action_state not in self.action_define:
+        if self.action_state is None or self.action_state not in self.action_define:
             return None
         return self.action_define[self.action_state]
 
@@ -90,12 +90,12 @@ class Role:
     @final
     def sleep(self) -> None:
         self._set_state(State.SLEEP)
-        self._action_state = self.state
+        self._night_action_state = self.state
 
     @final
     def awake(self) -> None:
         self._set_state(State.AWAKE)
-        self._action_state = self.state
+        self._night_action_state = None
 
     @final
     def die(self) -> None:
